@@ -1,0 +1,29 @@
+<%- include("./header.ejs") %>
+
+<body>
+    <h1>Create New Article</h1>
+    
+    <form action="/proj/knowledgebase/create" method="POST">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required><br><br>
+        
+        <label for="content">Content:</label><br>
+        <textarea id="content" name="content" rows="4" cols="50" required></textarea><br><br>
+        
+        <button type="submit">Create Article</button>
+    </form>
+
+    <h2>Example Articles</h2>
+    <ul>
+        <li class="example-article">
+            <strong>How to Use the System:</strong>
+            <p>This article provides an overview of how to use the system, including navigation and basic functions.</p>
+        </li>
+        <li class="example-article">
+            <strong>Common Issues and Solutions:</strong>
+            <p>Here you will find a list of common issues users encounter and how to solve them. This can help reduce support inquiries.</p>
+        </li>
+    </ul>
+</body>
+
+<%- include("./footer.ejs") %>

@@ -1,0 +1,215 @@
+.container-ticket-details {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.ticket-info {
+    margin: 15px 0;
+}
+
+.ticket-info p {
+    margin: 10px 0;
+}
+
+.status {
+    font-weight: bold;
+    padding: 3px 5px;
+    border-radius: 4px;
+    color: white;
+}
+
+.status.open {
+    background-color: #28a745; /* Green */
+}
+
+.status.in-progress {
+    background-color: #ffc107; /* Yellow */
+}
+
+.status.closed {
+    background-color: #dc3545; /* Red */
+}
+
+.resolution-section {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.attachment-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.attachment-list li {
+    margin: 5px 0;
+}
+
+.back-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+/* access denied */
+.access-denied-container {
+    max-width: 600px;
+    padding: 20px;
+    background-color: #ffdddd;
+    border: 1px solid #ffcccc;
+    border-radius: 8px;
+}
+
+.access-denied-container h1 {
+    color: #cc0000;
+}
+
+.access-denied-container p {
+    margin: 20px 0;
+    color: #666;
+}
+
+.access-denied-container a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.access-denied-container a:hover {
+    text-decoration: underline;
+}
+
+/* Highlight */
+.highlight {
+    background-color: #ffeb3b; /* Gul highlight */
+}
+
+.update-info {
+    font-style: italic;
+    color: #555;
+}
+
+.status-changed {
+    background-color: yellow;
+    color: black;
+}
+
+.status-update-notice {
+    color: red; /* Text color for notices */
+    font-style: italic;
+}
+ul.resolution-history li.agent-comment {
+    background-color: #D9EAD3; /* Light green background for agent comments */
+    color: black;
+    height: 120px;
+}
+
+ul.resolution-history li.user-comment {
+    background-color: #F4CCCC; /* Light red background for user comments */
+    color: black;
+    height: 120px;
+}
+
+.search-info {
+    margin: 10px;
+}
+.resolution-entry {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #ececec;
+    border-radius: 4px;
+}
+
+.resolution-detail {
+    display: flex;
+    align-items: center; /* Vertically center the content */
+}
+
+.resolution-label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.comments-row, .created-row {
+    grid-column: 1 / -1; /* Span full width */
+}
+
+.info-label {
+    font-weight: bold;
+    display: inline-block;
+    min-width: 120px;
+    color: #333;
+}
+
+.resolution-history span {
+    margin-right: 10px; /* Adds spacing between spans */
+}
+
+.info-content {
+    display: inline-block;
+}
+
+.ticket-info:last-child, .resolution-section:last-child {
+    border-bottom: none;
+}
+
+.ticket-info, .resolution-section {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.container-tickets {
+    display: flex;
+    flex-direction: column;
+    align-items: normal;
+}
+
+.ticket-details {
+    margin-bottom: 10px;
+}
+
+.ticket-info strong {
+    display: block;
+    margin-top: 10px; /* Increase the space below each strong tag */
+    color: #000;
+}
+
+.ticket-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.ticket-summary h3, .ticket-summary p {
+    margin: 10px;
+    padding: 5px 10px;
+    color: white; /* Makes text color white for better contrast */
+}
+
+.open-tickets {
+    background-color: #28a745; /* Green */
+}
+
+.closed-tickets {
+    background-color: #dc3545; /* Red */
+}
+
+.total-tickets {
+    background-color: #ffc107; /* Yellow */
+    color: black; /* Changes text color to black for better readability on yellow */
+}

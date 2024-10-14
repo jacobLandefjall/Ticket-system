@@ -1,0 +1,30 @@
+<%- include("./header.ejs")%>
+<body>
+    <div class="container">
+        <h1>Welcome to the Ticketing System</h1>
+        <p>Manage cases, create new requests, and read articles from our knowledge base.</p>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>Create a New Ticket</h2>
+                <p>Having an issue or a question? Create a ticket and we'll assist you as quickly as possible.</p>
+                <a href="/proj/index" class="btn btn-primary">Create a Ticket</a>
+            </div>
+
+            <div class="card">
+                <h2>View All Tickets</h2>
+                <p>View and manage all your open and previous tickets.</p>
+                <a href="/proj/tickets" class="btn btn-secondary">View Tickets</a>
+            </div>
+
+            <div class="card">
+                <h2>Knowledge Base</h2>
+                <p>Browse articles and guides in our knowledge base to find answers to common questions.</p>
+                <a href="/proj/knowledgebase" class="btn btn-info">View Knowledge Base</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<%- include("./footer.ejs")%>

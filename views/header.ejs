@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/details.css">
+    <title> Ticketing System</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/proj/home">Home</a></li>
+                <li><a href="/proj/index">Create Tickets</a></li>
+                <li><a href="/proj/tickets"> All Tickets</a></li>
+                <li><a href="/proj/tickets/history">View Ticket History</a></li>
+                <li><a href="/proj/knowledgebase">Knowledge Base</a></li>
+                <li class="logout"><a href="/logout/">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <% if (user) { %>
+        <div class="account-info">
+            <p><%= user.role %>: <%= user.email %></p>
+        </div>
+    <% } %>
+

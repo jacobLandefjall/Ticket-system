@@ -1,0 +1,115 @@
+<%- include("./header.ejs") %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var commentTextArea = document.getElementById('comment');
+        var charCounter = document.getElementById('char-counter');
+
+        // Update counter on input
+        commentTextArea.addEventListener('input', function() {
+            var remaining = 100 - commentTextArea.value.length;
+            charCounter.textContent = remaining + ' characters remaining';
+        });
+    });
+</script>
+
+<style>
+    .agent-comment {
+        background-color: #ffcccc; /* Light red background for agents */
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+    .user-comment {
+        background-color: #ccffcc; /* Light green background for users */
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+</style>
+
+<body>
+    <form action="/proj/tickets/history" method="GET" class="-info">
+        <input type="text" name="search" placeholder="Search by title or ticket ID" aria-label="Search by title or ticket ID">
+        <button type="submit">Search</button>
+        <button type="button" onclick="window.location.href='/proj/tickets/history';">All Tickets</button>
+    </form>
+    <div class="container-tickets">
+        <h2>Ticket History</h2>
+        <div class="ticket-summary">
+            <p class="open-tickets">Open Tickets: <%= openTickets %></p>
+            <p class="closed-tickets">Closed Tickets: <%= closedTickets %></p>
+            <p class="total-tickets">Total Tickets: <%= totalTickets %></p>
+        </div>
+        <ul class="ticket-list">
+            <% tickets.forEach(ticket => { 
+                const lastStatusChange = new Date(ticket.last_status_change);
+                const now = new Date();
+                const oneDay = 24 * 60 * 60 * 1000; // One day in milliseconds
+                const statusUpdatedRecently = (now - lastStatusChange) < oneDay;
+            %>
+                <li class="ticket-item">
+                    <div class="ticket-info">
+                        <div class="ticket-details">
+                            <strong>Title:</strong> <%= ticket.title %><br>
+                            <strong>Ticket ID:</strong> <%= ticket.id %><br>
+                            <strong>Creator:</strong> <%= ticket.user_email %><br>
+                            <strong>Description:</strong> <%= ticket.description %><br>
+                            <strong>Status:</strong> 
+                            <span class="<%= statusUpdatedRecently ? 'status-changed' : '' %>"><%= ticket.status %></span>
+                            <% if (statusUpdatedRecently) { %>
+                                <span class="status-update-notice">(Status updated)</span>
+                            <% } %>
+                            <br>
+                            <strong>Created At:</strong> <%= new Date(ticket.created_at).toLocaleString('sv-SE') %> <br>
+                            <strong>Category:</strong>
+                            <% if (user && user.role === 'agent') { %>
+                                <!-- Dropdown to change category for agents -->
+                                <form action="/proj/ticket/<%= ticket.id %>/category" method="POST">
+                                    <select name="category_id">
+                                        <% categories.forEach(category => { %>
+                                            <option value="<%= category.id %>" <%= category.id === ticket.category_id ? 'selected' : '' %>>
+                                                <%= category.name %>
+                                            </option>
+                                        <% }); %>
+                                    </select>
+                                    <button type="submit">Update Category</button>
+                                </form>
+                            <% } else { %>
+                                <%= ticket.category_name %>
+                            <% } %><br>
+                        </div>
+                    </div>
+
+                    <div class="comment-section">
+                        <div class="small-header">Add Comment:</div>
+                        <form action="/proj/ticket/<%= ticket.id %>/comment" method="POST">
+                            <textarea id="comment" name="comment" rows="3" required maxlength="100"></textarea>
+                            <span id="char-counter">100 characters remaining</span><br>
+                            <button type="submit">Submit Comment</button>
+                        </form>
+                    </div>
+
+                    <div class="resolution-section">
+                        <strong>Comments History:</strong>
+                        <ul class="resolution-history">
+                            <% if (ticket.resolutions && Array.isArray(ticket.resolutions)) { %>
+                                <% ticket.resolutions.forEach(resolution => { %>
+                                    <li class="<%= resolution.role === 'agent' ? 'agent-comment' : 'user-comment' %>">
+                                        <span><strong>Role:</strong> <%= resolution.role %>,</span>
+                                        <span><strong>User Name:</strong> <%= resolution.agent_name %>,</span>
+                                        <span><strong>Comment:</strong> <%= resolution.comment %>,</span>
+                                        <span><strong>Created At:</strong> <%= new Date(resolution.created_at).toLocaleString('sv-SE') %></span>
+                                    </li>
+                                <% }); %>
+                            <% } else { %>
+                                <li>No comments</li>
+                            <% } %>
+                        </ul>
+                        
+                    </div>
+
+
+                </li>
+            <% }); %>
+        </ul>        
+    </div>
+<%- include("./footer.ejs") %>
