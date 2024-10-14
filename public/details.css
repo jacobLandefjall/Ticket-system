@@ -110,13 +110,13 @@
     font-style: italic;
 }
 ul.resolution-history li.agent-comment {
-    background-color: #D9EAD3; /* Light green background for agent comments */
+    background-color: #B4B4B4;
     color: black;
     height: 120px;
 }
 
 ul.resolution-history li.user-comment {
-    background-color: #F4CCCC; /* Light red background for user comments */
+    background-color: #5CFF23;
     color: black;
     height: 120px;
 }

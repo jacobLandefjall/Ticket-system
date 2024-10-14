@@ -100,8 +100,11 @@ CREATE TABLE Resolutions (
     action TEXT,
     comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (ticket_id) REFERENCES Tickets(id) ON DELETE CASCADE
+    role VARCHAR(255),  -- Lägger till kolumnen 'role'
+    FOREIGN KEY (ticket_id) REFERENCES Tickets(id) ON DELETE CASCADE,
+    CONSTRAINT chk_role CHECK (role IN ('agent', 'user'))
 );
+
 
 ALTER TABLE Resolutions
 ADD COLUMN role VARCHAR(255);
