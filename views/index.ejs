@@ -1,0 +1,82 @@
+<%- include("./header.ejs") %>
+
+<body>
+    <h1>Submit a Ticket</h1>
+    <form action="/proj/ticket" method="post" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Ticket Title" required>
+        <br><br>
+        <textarea class="description-style" name="description" rows="4" cols="50" placeholder="Describe your issue" required></textarea>
+        <br><br>
+        <select name="category_id" required>
+            <option value="">Choose category</option>
+            <% categories.forEach(category => { %>
+                <option value="<%= category.id %>"><%= category.name %></option>
+            <% }); %>
+        </select>
+        <br><br>
+        <p>Accept up to 10 files.</p>       
+        <input type="file" name="attachments" id="file-input" multiple>
+        <br><br>
+        <div id="file-list"></div> <!-- Display area for selected files -->
+        <br>
+        <div id="file-buttons">
+            <button type="button" id="add-file-button" style="margin-right: 10px;">Add New File</button>
+            <button type="button" id="remove-file-button">Remove Selected Files</button>
+        </div>
+        <br>
+        <button type="submit" style="margin-top: 10px;">Submit Ticket</button>
+    </form> 
+
+    <% if (user && user.role === 'agent') { %>
+    <h2>Create Category</h2>
+    <form action="/proj/category" method="post">
+        <input type="text" name="name" placeholder="Category name" required>
+        <button type="submit">Create Category</button>
+    </form>
+    <% } %>
+
+    <script>
+        let selectedFiles = [];
+        
+        const fileInput = document.getElementById('file-input');
+        const fileButtons = document.getElementById('file-buttons');
+        const fileListDisplay = document.getElementById('file-list');
+        const maxFiles = 10; // Maximum number of files allowed
+        
+        fileInput.addEventListener('change', function(event) {
+            let newFiles = Array.from(fileInput.files);
+            if (selectedFiles.length + newFiles.length > maxFiles) {
+                alert(`You can only upload a maximum of ${maxFiles} files.`);
+                return; // Prevent more files from being added
+            }
+            newFiles.forEach(file => {
+                if (!selectedFiles.some(f => f.name === file.name)) {
+                    selectedFiles.push(file);
+                }
+            });
+            updateFileDisplay();
+            fileInput.value = ''; // Reset file input after adding files
+        });
+        
+        document.getElementById('add-file-button').addEventListener('click', function() {
+            if (selectedFiles.length >= maxFiles) {
+                alert(`You cannot add more than ${maxFiles} files.`);
+                return;
+            }
+            fileInput.click(); // Only open file selector if under the limit
+        });
+        
+        document.getElementById('remove-file-button').addEventListener('click', function() {
+            selectedFiles = []; // Clear the array
+            updateFileDisplay();
+            fileInput.value = ''; // Reset the file input element
+        });
+        
+        function updateFileDisplay() {
+            fileListDisplay.innerHTML = selectedFiles.map(file => file.name).join('<br>');
+            fileButtons.style.display = selectedFiles.length > 0 ? 'block' : 'none';
+        }
+    </script>
+     
+
+<%- include("./footer.ejs") %>

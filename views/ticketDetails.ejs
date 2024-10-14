@@ -1,0 +1,46 @@
+<%- include("./header.ejs") %>
+
+<body>
+    <div class="container-ticket-details">
+        <h1>Ticket Details</h1>
+        <div class="ticket-info">
+            <p><strong>Title:</strong> <%= ticket.title %></p>
+            <p><strong>Ticket ID:</strong> <%= ticket.id %></p>
+            <p><strong>Description:</strong> <%= ticket.description %></p>
+            <p><strong>Category:</strong> <%= ticket.category_name %></p>
+            <p><strong>Team:</strong> <%= ticket.team_name %></p>
+            <p><strong>Status:</strong> <span class="status <%= ticket.status.toLowerCase() %>"><%= ticket.status %></span></p>
+            <p><strong>Created At:</strong> <%= new Date(ticket.created_at).toLocaleString('sv-SE', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) %></p>
+
+            <% if (ticket.last_updated_at && ticket.status_history && ticket.status_history.length > 0) { %>
+                <p><strong>Last Updated At:</strong> <%= ticket.last_updated_at %></p>
+                <p><strong>Status Change:</strong></p>
+                <ul>
+                    <% ticket.status_history.forEach(history => { %>
+                        <li><%= history.old_status %> to <%= history.new_status %> on <%= history.updated_at %></li>
+                    <% }); %>
+                </ul>
+            <% } %>
+        </div>
+    </div>
+    
+    <div class="resolution-section">
+        <h3>Attachments:</h3>
+        <% if (attachments && attachments.length > 0) { %>
+            <ul class="attachment-list">
+                <% attachments.forEach(function(attachment) { %>
+                    <li>
+                        <a href="/uploads/<%= attachment.split('/').pop() %>" target="_blank">
+                            <%= attachment.split('/').pop() %>
+                        </a>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>No attachments.</p>
+        <% } %>
+        <a href="/proj/tickets" class="back-button">Back to Tickets</a>
+    </div>
+    
+
+<%- include("./footer.ejs") %>

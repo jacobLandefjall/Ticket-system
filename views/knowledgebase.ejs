@@ -1,0 +1,43 @@
+<%- include("./header.ejs") %>
+
+<h1>Knowledgebase</h1>
+
+
+<% if (user && user.role === 'agent') { %>
+    <a href="/proj/knowledgebase/create" class="btn btn-primary">Create New Article</a>
+<% } %>
+
+
+
+<!-- Display existing articles -->
+<h2>Articles</h2>
+<ul class="knowledgebase-list">
+    <% knowledgeBase.forEach(article => { %>
+        <li class="knowledgebase-item">
+            <strong><%= article.title %></strong>
+            <p><%= article.content %></p>
+        </li>
+    <% }); %>
+</ul>
+
+<ul class="example-articles">
+    <li class="example-article">
+        <strong>Create Ticket:</strong>
+        <ol>
+            <li>Click on "Create Ticket" from the main menu.</li>
+            <li>Fill in the fields with the required information.</li>
+            <li>Press "Submit" to create your ticket.</li>
+            <li><a href="/proj/index">Create Tickets</a></li>
+        </ol>
+    </li>
+    <li class="example-article">
+        <strong>Ticketing Channels:</strong>
+        <ol>
+            <li>Google Chrome</li>
+            <li>Firefox</li>
+            <li>Microsoft Edge</li>
+        </ol>
+    </li>
+</ul>
+
+<%- include("./footer.ejs") %>

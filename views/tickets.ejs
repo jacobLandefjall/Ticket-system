@@ -1,0 +1,88 @@
+<%- include("./header.ejs") %>
+
+<body>
+    <div class="container-tickets">
+        <h1>Tickets</h1>
+        <form id="filterForm" action="/proj/tickets" method="get">
+            <input type="text" name="description" placeholder="Filter by description" onchange="submitForm()">
+            <select name="category" onchange="submitForm()">
+                <option value="">Select Category</option>
+                <% categories.forEach(category => { %>
+                    <option value="<%= category.name %>"><%= category.name %></option>
+                <% }); %>
+            </select>
+            <select name="status" onchange="submitForm()">
+                <option value="">Select Status</option>
+                <option value="Open">Open</option>
+                <option value="Closed">Closed</option>
+            </select>
+            <select name="team" onchange="submitForm()">
+                <option value="">Select Team</option>
+                <% teams.forEach(team => { %>
+                    <option value="<%= team.name %>"><%= team.name %></option>
+                <% }); %>
+            </select>            
+        </form>
+    <script>
+        function submitForm() {
+            document.getElementById('filterForm').submit();
+        }
+    </script>
+
+        <h2>Ticket List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Team</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                    <th>Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% tickets.forEach(ticket => { 
+                    const lastUpdated = new Date(ticket.updated_at);
+                    const now = new Date();
+                    const oneDay = 24 * 60 * 60 * 1000;
+                    const isRecentlyUpdated = (now - lastUpdated) < oneDay;
+            
+                    const updateInfo = (ticket.updateInfo && ticket.updateInfo !== 'N/A') ? ticket.updateInfo : ''; // Visa bara updateInfo om den existerar
+                %>
+                <tr class="<%= ticket.has_updates ? 'highlight' : '' %>">
+                    <td><%= ticket.title %></td>
+                    <td><%= ticket.description %></td>
+                    <td><%= ticket.category_name %></td>
+                    <td><%= ticket.team_name %></td>
+                    <td><%= ticket.status %></td>
+                    <td>
+                        <form action="/proj/ticket/<%= ticket.id %>/status" method="post">
+                            <select name="status">
+                                <option value="Open" <%= ticket.status === 'Open' ? 'selected' : '' %>>Open</option>
+                                <option value="Closed" <%= ticket.status === 'Closed' ? 'selected' : '' %>>Closed</option>
+                            </select>
+                            <button type="submit">Update Status</button>
+                        </form>
+                        <a href="/proj/ticket/<%= ticket.id %>" class="view-btn">Details</a>
+                    </td>
+                    <td>
+                        <strong>Last updated:</strong> <%= lastUpdated.toLocaleString() %><br>
+                        <% if (updateInfo) { %>
+                            <strong>Update:</strong> <%= updateInfo %> <!-- Visa vad som uppdaterades -->
+                        <% } %>
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+            
+            
+            
+            
+            
+        </table>
+
+    </div>
+    
+<%- include("./footer.ejs") %>
