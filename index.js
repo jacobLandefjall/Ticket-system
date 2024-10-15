@@ -43,7 +43,16 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+const fileFilter = (req, file, cb) => {
+    // Accept any file type
+    cb(null, true);
+};
+
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter, // Attach the file filter
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB size limit
+});
 
 
 // Database connection
@@ -493,37 +502,31 @@ app.get('/proj/ticket/:id', (req, res) => {
     });
 });
 
-
-
-
 // Route to create a new ticket (limit with 10 files)
 app.post('/proj/ticket', secured, checkRole('user', 'agent'), upload.array('attachments', 10), (req, res) => {
-    console.log('Files:', req.files);
-    console.log('Body:', req.body);
+    console.log('Files:', req.files); // Logs the uploaded files
+    console.log('Body:', req.body); // Logs the form data
+
     const { title, description, category_id } = req.body;
 
     // Validate required fields
     if (!title || !description || !category_id) {
         return res.status(400).send("Missing required fields");
     }
-    // Multer throws an error when a file exceeds the size limit
+
+    // Check if there are file validation errors
     if (req.fileValidationError) {
         console.error('Validation error:', req.fileValidationError);
         return res.status(400).send(req.fileValidationError);
     }
 
-    const attachmentPaths = req.files.map(file => file.path);
+    const attachmentPaths = req.files.map(file => file.path); // Extract the file paths
     console.log('Attachment Paths:', attachmentPaths);
 
-    // Extract userId from the authenticated user
     const userId = req.oidc.user.sub;
-    console.log("USER ID:", userId);
-
-    // Extract the user ID part
     const extractedUserId = userId.split('|')[1];
-    console.log("Extracted User ID:", extractedUserId);
-
-    // Fetch the corresponding user_id from the Users table
+    
+    // Fetch or create user
     const queryUserId = 'SELECT id FROM Users WHERE google_id = ?';
 
     connection.query(queryUserId, [extractedUserId], (error, results) => {
@@ -533,8 +536,8 @@ app.post('/proj/ticket', secured, checkRole('user', 'agent'), upload.array('atta
         }
 
         if (results.length === 0) {
-            // User not found, create a new user
-            const email = req.oidc.user.email; // Assuming you have the email from the authenticated user
+            // If the user doesn't exist, create a new user
+            const email = req.oidc.user.email;
             const insertUserQuery = 'INSERT INTO Users (email, google_id) VALUES (?, ?)';
 
             connection.query(insertUserQuery, [email, extractedUserId], (insertError) => {
@@ -543,37 +546,28 @@ app.post('/proj/ticket', secured, checkRole('user', 'agent'), upload.array('atta
                     return res.status(500).send("Error creating user");
                 }
 
-                // Fetch the newly created user_id
+                // Fetch the new user_id
                 connection.query(queryUserId, [extractedUserId], (fetchError, fetchResults) => {
                     if (fetchError) {
                         console.error("Error fetching user ID after creation:", fetchError);
                         return res.status(500).send("Error fetching user ID");
                     }
 
-                    const user_id = fetchResults[0].id; // Get the newly created user ID
+                    const user_id = fetchResults[0].id;
                     createTicket(title, description, category_id, attachmentPaths, user_id, res);
                 });
             });
         } else {
-            // User exists, proceed to create the ticket
             const user_id = results[0].id;
             createTicket(title, description, category_id, attachmentPaths, user_id, res);
-            
-            // Call the function that assigns the role
-            const roleQuery = 'INSERT IGNORE INTO UserRoles (user_id, role_id) VALUES (?, ?)';
-            connection.query(roleQuery, [user_id, 1], (roleError) => {
-                if (roleError) {
-                    console.error("Error assigning role:", roleError);
-                }
-            });
         }
     });
 });
 
-
-// Function to create a ticket
+// Function to create a ticket and save the attachments
 function createTicket(title, description, category_id, attachmentPaths, user_id, res) {
     const query = 'INSERT INTO Tickets (title, description, category_id, user_id) VALUES (?, ?, ?, ?)';
+    
     connection.query(query, [title, description, category_id, user_id], (error, results) => {
         if (error) {
             console.error("Error creating ticket:", error);
@@ -582,25 +576,22 @@ function createTicket(title, description, category_id, attachmentPaths, user_id,
 
         const ticketId = results.insertId;
 
-        const attachmentQueries = attachmentPaths.map(path => {
-            return new Promise((resolve, reject) => {
-                connection.query('INSERT INTO Attachments (ticket_id, file_path) VALUES (?, ?)', [ticketId, path], (err) => {
-                    if (err) reject(err);
-                    resolve();
-                });
+        // Insert each attachment into the Attachments table
+        attachmentPaths.forEach(path => {
+            const sql = 'INSERT INTO Attachments (ticket_id, file_path) VALUES (?, ?)';
+            connection.query(sql, [ticketId, path], (err, result) => {
+                if (err) {
+                    console.error("Error saving attachment:", err);
+                } else {
+                    console.log('Attachment saved:', result.insertId);
+                }
             });
         });
 
-        Promise.all(attachmentQueries)
-            .then(() => {
-                res.redirect('/proj/tickets');
-            })
-            .catch(err => {
-                console.error("Error saving attachments:", err);
-                res.status(500).send("Error saving attachments");
-            });
+        res.redirect('/proj/tickets'); // Redirect after saving the ticket and attachments
     });
 }
+
 
 // Route to show ticket history
 app.get('/proj/tickets/history', (req, res) => {
