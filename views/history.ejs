@@ -69,12 +69,11 @@
                     <div class="comment-section">
                         <div class="small-header">Add Comment:</div>
                         <form action="/proj/ticket/<%= ticket.id %>/comment" method="POST">
-                            <textarea id="comment" name="comment" rows="3" required maxlength="100"></textarea>
+                            <textarea id="comment" class="textarea-comment" name="comment" rows="3" required maxlength="100"></textarea>
                             <span id="char-counter">100 characters remaining</span><br>
                             <button type="submit">Submit Comment</button>
                         </form>
                     </div>
-
                     <div class="resolution-section">
                         <strong>Comments History:</strong>
                         <ul class="resolution-history">

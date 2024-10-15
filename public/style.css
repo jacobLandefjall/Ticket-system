@@ -147,6 +147,7 @@ ul.resolution-history li {
     align-items: center;
     justify-content: space-between; /* Ensures space between items */
     flex-wrap: wrap; /* Allows items to wrap if not enough space */
+    margin: 10px;
 }
 
 /* Footer Styling */
@@ -216,7 +217,9 @@ textarea {
 
 .textarea-comment {
     width: 100%;
-    box-sizing: border-box; /* Include padding and border in the width */
+    box-sizing: border-box;
+    width: 334px;
+    height: 150px;
 }
 
 .resolution-history li {
