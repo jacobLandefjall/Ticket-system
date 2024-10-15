@@ -15,7 +15,7 @@
         </select>
         <br><br>
         <p>Accept up to 10 files.</p>       
-        <input type="file" name="attachments" id="file-input" multiple>
+        <input type="file" name="attachments" multiple>
         <br><br>
         <div id="file-list"></div> <!-- Display area for selected files -->
         <br>
@@ -38,11 +38,11 @@
     <script>
         let selectedFiles = [];
         
-        const fileInput = document.getElementById('file-input');
-        const fileButtons = document.getElementById('file-buttons');
+        // Select the input file by name
+        const fileInput = document.querySelector('input[name="attachments"]');
         const fileListDisplay = document.getElementById('file-list');
         const maxFiles = 10; // Maximum number of files allowed
-        
+
         fileInput.addEventListener('change', function(event) {
             let newFiles = Array.from(fileInput.files);
             if (selectedFiles.length + newFiles.length > maxFiles) {
@@ -55,7 +55,6 @@
                 }
             });
             updateFileDisplay();
-            fileInput.value = ''; // Reset file input after adding files
         });
         
         document.getElementById('add-file-button').addEventListener('click', function() {
@@ -63,20 +62,21 @@
                 alert(`You cannot add more than ${maxFiles} files.`);
                 return;
             }
-            fileInput.click(); // Only open file selector if under the limit
+            fileInput.click(); // Trigger file selector
         });
         
         document.getElementById('remove-file-button').addEventListener('click', function() {
             selectedFiles = []; // Clear the array
             updateFileDisplay();
-            fileInput.value = ''; // Reset the file input element
         });
         
         function updateFileDisplay() {
             fileListDisplay.innerHTML = selectedFiles.map(file => file.name).join('<br>');
-            fileButtons.style.display = selectedFiles.length > 0 ? 'block' : 'none';
+            document.getElementById('file-buttons').style.display = selectedFiles.length > 0 ? 'block' : 'none';
         }
+
+        // Initially hide file buttons if no files are selected
+        updateFileDisplay();
     </script>
-     
 
 <%- include("./footer.ejs") %>
