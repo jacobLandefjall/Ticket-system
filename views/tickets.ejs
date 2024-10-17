@@ -53,7 +53,9 @@
                 %>
                 <tr class="<%= ticket.has_updates ? 'highlight' : '' %>">
                     <td><%= ticket.title %></td>
-                    <td><%= ticket.description %></td>
+                    <div class="ticket-description">
+                        <td><%= ticket.description %></td>
+                    <div>
                     <td><%= ticket.category_name %></td>
                     <td><%= ticket.team_name %></td>
                     <td><%= ticket.status %></td>
