@@ -4,6 +4,18 @@
         <h1>Welcome to the Ticketing System</h1>
         <p>Manage cases, create new requests, and read articles from our knowledge base.</p>
 
+        <div class="change-role-form">
+            <h2>Change Your Role</h2>
+            <form action="/change-role" method="POST">
+                <label for="role">Välj din nya roll:</label>
+                <select name="newRole" id="role">
+                    <option value="user">User</option>
+                    <option value="agent">Agent</option>
+                </select>
+                <button type="submit" class="btn btn-warning">Uppdatera Roll</button>
+            </form>
+        </div>
+
         <div class="main-content">
             <div class="card">
                 <h2>Create a New Ticket</h2>

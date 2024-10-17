@@ -11,12 +11,12 @@ const { auth } = require('express-openid-connect');
 require('dotenv').config();
 
 const classifyTicket = (description) => {
-    if (description.toLowerCase().includes("betalning") || description.toLowerCase().includes("faktura")) {
-        return 1;
-    } else if (description.toLowerCase().includes("teknisk") || description.toLowerCase().includes("support")) {
-        return 2;
+    if (description.toLowerCase().includes("betalning") || description.toLowerCase().includes("faktura") || description.toLowerCase().includes("finance")) {
+        return 1; // Finance category
+    } else if (description.toLowerCase().includes("tech support") || description.toLowerCase().includes("support") || description.toLowerCase().includes("teknisk")) {
+        return 2; // Tech Support category
     } else {
-        return 3;
+        return 3; // General Support
     }
 };
 
@@ -89,19 +89,67 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
+
+// new users automatically get the role of "user"
 app.use((req, res, next) => {
     if (req.oidc.isAuthenticated()) {
         const user = req.oidc.user;
-
         const userRoles = user[`https://ticketsystem.com/roles`] || [];
-        user.role = userRoles.includes('agent') ? 'agent' : 'user';
 
-        res.locals.user = user;
+        // Kontrollera om användaren redan har en roll i Auth0 eller lokalt
+        if (userRoles.length === 0) {
+            const userId = user.sub;
+
+            // Kolla om användaren redan har en roll i lokala databasen
+            const query = 'SELECT role FROM Roles WHERE user_id = ?';
+            connection.query(query, [userId], (error, results) => {
+                if (error) {
+                    console.error("Error checking roles in the database:", error);
+                    return next(error);
+                }
+
+                // Om användaren redan har en roll i databasen, använd den
+                if (results.length > 0) {
+                    res.locals.user = {
+                        email: user.email,
+                        role: results[0].role  // Använd den befintliga rollen från databasen
+                    };
+                    return next();
+                }
+
+                // Om ingen roll finns, tilldela "user" som standardroll
+                const insertRoleQuery = 'INSERT INTO Roles (name, user_id, role) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE role = ?';
+                connection.query(insertRoleQuery, [`role_${userId}`, userId, 'user', 'user'], (error) => {
+                    if (error) {
+                        console.error("Error assigning default role:", error);
+                        return next(error);
+                    }
+                    console.log('Default role "user" assigned successfully');
+
+                    // Efter att rollen tilldelats, sätt res.locals.user
+                    res.locals.user = {
+                        email: user.email,
+                        role: 'user'  // Eftersom vi just har tilldelat 'user'-rollen
+                    };
+                    next();
+                });
+            });
+        } else {
+            // Om användaren redan har en roll i Auth0, använd den
+            const role = userRoles.includes('agent') ? 'agent' : 'user';
+            res.locals.user = {
+                email: user.email,
+                role: role  // Tilldela den befintliga rollen från Auth0
+            };
+            next();
+        }
     } else {
         res.locals.user = null;
+        next();
     }
-    next();
 });
+
+
 
 app.use((req, res, next) => {
     connection.query('SELECT * FROM Categories', (error, categories) => {
@@ -141,7 +189,6 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Helper function to send email updates
 const sendEmailUpdate = (to, subject, text) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -158,6 +205,48 @@ const sendEmailUpdate = (to, subject, text) => {
         }
     });
 };
+const changeUserRole = async (userId, newRole) => {
+    const query = 'UPDATE Users SET role = ? WHERE id = ?';
+    return new Promise((resolve, reject) => {
+        connection.query(query, [newRole, userId], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
+
+app.post('/change-role', secured, async (req, res) => {
+    const { newRole } = req.body;
+    const userId = req.oidc.user.sub;
+
+    // Kontrollera om den nya rollen är giltig
+    if (!['user', 'agent'].includes(newRole)) {
+        return res.status(400).send('Invalid role specified');
+    }
+
+    try {
+        // Uppdatera användarens roll i den lokala databasen
+        const query = 'UPDATE Roles SET role = ? WHERE user_id = ?';
+        connection.query(query, [newRole, userId], (error, results) => {
+            if (error) {
+                console.error('Failed to update user role:', error);
+                return res.status(500).send('Failed to update user role');
+            }
+
+            // Uppdatera användarens roll i sessionen och vidarebefordra till en sida
+            res.locals.user.role = newRole;  // Uppdatera rollen i sessionen
+            console.log(`Role successfully changed to ${newRole}`);
+            res.redirect('/proj/home');  // Skicka tillbaka användaren till startsidan efter rollbyte
+        });
+    } catch (error) {
+        console.error('Failed to update user role:', error);
+        res.status(500).send('Failed to update user role');
+    }
+});
+
 
 app.get('/proj/tickets/manage', secured, checkRole('agent'), (req, res) => {
     res.render('manage_tickets');
@@ -169,7 +258,6 @@ app.get('/proj/home' , secured, (req, res) => {
 });
 
 app.use('/auth', authRoutes);
-
 
 // Route to list knowledge base articles
 app.get('/proj/index', (req, res) => {
@@ -202,6 +290,7 @@ app.post('/proj/category', checkRole('agent'), (req, res) => {
         res.redirect('/proj/index');
     });
 });
+
 app.get('/proj/tickets', (req, res) => {
     const { description, category, status, team } = req.query;
     let query = `SELECT Tickets.*, Categories.name AS category_name,
@@ -298,12 +387,16 @@ app.post('/proj/ticket/:id/resolution', (req, res) => {
 });
 
 // Route to add a comment to a ticket
-app.post('/proj/ticket/:id/comment', checkRole('agent', 'user'), (req, res) => {
+app.post('/proj/ticket/:id/comment', secured, checkRole('agent', 'user'), (req, res) => {
     const ticketId = req.params.id;
     const { comment } = req.body;
+    
+    // Använd res.locals.user för att hämta den aktuella rollen
     const agent_name = req.oidc.user.name;
-    const role = req.oidc.user['https://ticketsystem.com/roles'] ? (req.oidc.user['https://ticketsystem.com/roles'].includes('agent') ? 'agent' : 'user') : 'user';
-    console.log(role)
+    const role = res.locals.user.role; // Hämta rollen från sessionen
+
+    console.log(`User ${agent_name} with role ${role} is adding a comment.`);
+
     if (!comment) {
         return res.status(400).send("Comment is required");
     }
@@ -696,14 +789,12 @@ app.get('/proj/tickets/history', (req, res) => {
     });
 });
 
-
 app.get('/logout', (req, res) => {
     res.oidc.logout({
         returnTo: 'http://localhost:1337',
         client_id: process.env.AUTH0_CLIENT_ID,
     });
 });
-
 
 app.get('/login', (req, res) => {
     res.oidc.login({
@@ -724,7 +815,6 @@ app.get('/proj/knowledgebase', (req, res) => {
         });
     });
 });
-
 
 // Route to show form for creating a new knowledge base article
 app.get('/proj/knowledgebase/create', checkRole('agent'), (req, res) => {
@@ -785,3 +875,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Server is listening on http://localhost:${port}`);
 });
+
+module.exports = { classifyTicket, app}

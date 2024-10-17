@@ -39,7 +39,10 @@
                             <strong>Title:</strong> <%= ticket.title %><br>
                             <strong>Ticket ID:</strong> <%= ticket.id %><br>
                             <strong>Creator:</strong> <%= ticket.user_email %><br>
-                            <strong>Description:</strong> <%= ticket.description %><br>
+                            <strong>Description:</strong> 
+                            <div class="ticket-description">
+                                <%= ticket.description.replace(/\n/g, '<br>') %>
+                            </div>
                             <strong>Status:</strong> 
                             <span class="<%= statusUpdatedRecently ? 'status-changed' : '' %>"><%= ticket.status %></span>
                             <% if (statusUpdatedRecently) { %>

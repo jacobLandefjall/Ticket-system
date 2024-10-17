@@ -37,6 +37,11 @@ CREATE TABLE Roles (
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
+ALTER TABLE Roles ADD COLUMN user_id VARCHAR(255);
+ALTER TABLE Roles ADD role VARCHAR(255);
+ALTER TABLE Roles DROP INDEX name;
+
+
 -- Insert default roles
 INSERT INTO Roles (name) VALUES ('user'), ('agent');
 
