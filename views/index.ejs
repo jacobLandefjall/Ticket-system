@@ -19,7 +19,8 @@
         </select>
         <br><br>
 
-        <p>Accept up to 10 files.</p>  
+        <p>Accept up to 10 files.</p>
+        <p>10MB size limit per file.</p>
         <input type="file" name="attachments" multiple>
         <br><br>
         <div id="file-list"></div> <!-- Display area for selected files -->
@@ -30,15 +31,7 @@
         </div>
         <br>
         <button type="submit" style="margin-top: 10px;">Submit Ticket</button>
-    </form> 
-
-    <% if (user && user.role === 'agent') { %>
-    <h2>Create Category</h2>
-    <form action="/proj/category" method="post">
-        <input type="text" name="name" placeholder="Category name" required>
-        <button type="submit">Create Category</button>
     </form>
-    <% } %>
 
     <script>
         let selectedFiles = [];

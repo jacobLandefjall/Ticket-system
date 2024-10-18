@@ -1,0 +1,15 @@
+<%- include("./header.ejs") %>
+
+<% if (user && user.role === 'agent') { %>
+    <h2>Create Category For Tickets</h2>
+    <form action="/proj/category" method="post">
+        <input type="text" name="name" placeholder="Category name" required>
+        <button type="submit">Create Category</button>
+    </form>
+<% } %>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+
+<%- include("./footer.ejs") %>
