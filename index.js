@@ -789,6 +789,11 @@ app.get('/proj/tickets/history', (req, res) => {
     });
 });
 
+app.get('/proj/admintools', checkRole('agent'), (req, res) => {
+    res.render('adminTool');
+});
+
+
 app.get('/logout', (req, res) => {
     res.oidc.logout({
         returnTo: 'http://localhost:1337',

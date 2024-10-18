@@ -15,6 +15,9 @@
                 <li><a href="/proj/tickets"> All Tickets</a></li>
                 <li><a href="/proj/tickets/history">View Ticket History</a></li>
                 <li><a href="/proj/knowledgebase">Knowledge Base</a></li>
+                <% if (user && user.role === 'agent') { %> 
+                    <li><a href="/proj/admintools">Admin Tools</a></li>
+                <% } %>
                 <li class="logout"><a href="/logout/">Logout</a></li>
             </ul>
         </nav>
