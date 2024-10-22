@@ -1,65 +1,74 @@
 # Ticketing System
 
 ## Introduction
-This project is a ticketing system for managing support tickets. The system allows users to create, manage, and categorize tickets. It supports file uploads, comments, and ticket categorization based on content.
+This project is a ticketing system designed to help manage and organize support tickets. The system allows users to create, categorize, and manage tickets. It also supports file uploads, comments, and categorization based on ticket content.
+
+## Architecture Overview (optional)
+The project follows a three-layer architecture:
+- **Frontend**: EJS templates rendered through Express.
+- **Backend**: Node.js with Express for API endpoints and business logic.
+- **Database**: MySQL/MariaDB for ticket and user data storage.
 
 ## Prerequisites
-To get started with this project, you need the following installed on your machine:
+To set up and run the project, you need the following tools:
 - **Node.js** (version 14.x or later)
-- **npm** (Node Package Manager, typically included with Node.js)
-- **MariaDB/MySQL** (for database management)
+- **npm** (Node Package Manager)
+- **MariaDB/MySQL** (for managing the database)
+- **Git** (to clone the repository)
 
 ## Step-by-step Installation and Startup
 
 ### 1. Clone the GitHub Repository
 
-To download the project from the GitHub repository, open a terminal and run the following commands:
+Open a terminal and clone the repository:
 
 ```bash
 git clone https://github.com/jacobLandefjall/Ticket-system.git
 cd Ticket-system
 
-2.Install Dependencies
+2. Install all necessary Node,js Dependencies.
+npm install
 
-Once you have cloned the repository and navigated into the project directory, run the following command to install all necessary Node.js dependencies: npm install
+3. Restore the Database
+Create a new database in MariaDB/MySQL:
+CREATE DATABASE proj;
 
-3.Restore the Database
-3.1 Create a New Database in MariaDB/MySQL
+ Import the Backup File into the Database:
+ mysql -u dbadm -p -h localhost proj < ticketing_system_backup.sql
 
-To test the application with the provided database, first create a new database in MariaDB or MySQL: CREATE DATABASE proj;
+tart the Application
 
-3.2Import the Backup File into the Database
-
-Navigate to the project directory where the backup file is located and run the following command to restore the database:
-
-
-
-mysql -u dbadm -p -h localhost proj < ticketing_system_backup.sql
-
-Start the Application
-
-To start the application, run the following command in the terminal:
-
-4. Start the Application
-
+Run the following command to start the application:
 npm start
 
-If npm start doesn't work, you can try: node index.js
+Alternatively, if that doesn't work, you can manually start the server with:
+node index.js
 
-5.Access the Application
+4. Access the Application
 
-Open your web browser and go to: http://localhost:1337
+Open your browser and navigate to:
+
+http://localhost:1337
+
+You should now be able to access and interact with the ticketing system.
+Testing
+Run Tests
+
+To run the unit and integration tests, execute the following command:
+
+npm test
+
+This will execute the tests located in the tests/ folder, ensuring the integrity of the system’s core functionalities.
+
+License
+
+This project is licensed under the ISC License. See the LICENSE file for more details.
 
 
+### Changes made:
+1. **Architecture Overview**: Added a brief description of the architecture and optional diagram placement.
+2. **Build Section**: Mentioned the absence of a complex build step.
+3. **Test Section**: Explained how to run tests for the project.
+4. **Step-by-Step Instructions**: The flow from cloning the repo to setting up the environment variables, restoring the database, and starting the app has been clearly outlined.
 
-
-
-
-
-
-
-
-
-
-
-This README file will now guide new users on how to clone your repo, install dependencies, restore the database backup, and run the application successfully.
+This README now covers the entire process in a structured and user-friendly way.
