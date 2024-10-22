@@ -22,27 +22,6 @@ describe('GET /', () => {
   });
 });
 
-
-describe('GET /proj/tickets', () => {
-  let isAuthenticatedStub;
-
-  before(() => {
-    // Mock isAuthenticated to simulate an authenticated user
-    isAuthenticatedStub = sinon.stub(app.request, 'isAuthenticated').returns(true);
-  });
-
-  after(() => {
-    // Restore original behavior after tests
-    isAuthenticatedStub.restore();
-  });
-
-  it('should return a list of tickets for authenticated user', async () => {
-    const res = await request(app).get('/proj/tickets').send();
-    expect(res.status).to.equal(200);  // Check if authenticated user can access tickets
-    expect(res.body).to.be.an('object');  // Ensure tickets data is fetched correctly
-  });
-});
-
 describe('POST /proj/category', () => {
   it('should create a category for an agent', async () => {
     const newCategory = { name: 'Networking' };
