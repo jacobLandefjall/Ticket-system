@@ -1,4 +1,5 @@
 # Ticketing System
+![Skärmbild 2024-10-21 152245](https://github.com/user-attachments/assets/fa813080-a9c7-4771-9990-5ebf6db3cdc5)
 
 ## Introduction
 This project is a ticketing system designed to help manage and organize support tickets. The system allows users to create, categorize, and manage tickets. It also supports file uploads, comments, and categorization based on ticket content.
