@@ -4,7 +4,7 @@
 ## Introduction
 This project is a ticketing system designed to help manage and organize support tickets. The system allows users to create, categorize, and manage tickets. It also supports file uploads, comments, and categorization based on ticket content.
 
-## Architecture Overview (optional)
+## Architecture Overview
 The project follows a three-layer architecture:
 - **Frontend**: EJS templates rendered through Express.
 - **Backend**: Node.js with Express for API endpoints and business logic.
