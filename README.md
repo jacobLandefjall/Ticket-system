@@ -1,61 +1,65 @@
-# Ticket-system
-This is my project for the ticket system course.
-Project Title: Ticket Management System
-Introduction
+# Ticketing System
 
-This project is a Ticket Management System that allows users to create and manage support tickets. Agents can classify and resolve tickets, and both users and agents can comment on ticket updates. The system supports file attachments and integrates with SSO for secure login.
-Architecture Overview
+## Introduction
+This project is a ticketing system for managing support tickets. The system allows users to create, manage, and categorize tickets. It supports file uploads, comments, and ticket categorization based on content.
 
-The system uses a Node.js backend with MySQL as the database. EJS is used for server-side templating, and Multer handles file uploads. Authentication is done using Auth0 with roles assigned to users and agents.
+## Prerequisites
+To get started with this project, you need the following installed on your machine:
+- **Node.js** (version 14.x or later)
+- **npm** (Node Package Manager, typically included with Node.js)
+- **MariaDB/MySQL** (for database management)
 
-How to Use
-Prerequisites
+## Step-by-step Installation and Startup
 
-Before setting up the project, ensure you have the following installed:
+### 1. Clone the GitHub Repository
 
-    Node.js (version 14 or higher)
-    MySQL (version 5.7 or higher)
-    Git (for version control)
-    Auth0 account (for SSO integration)
+To download the project from the GitHub repository, open a terminal and run the following commands:
 
-You also need to create a .env file with the following keys:
+```bash
+git clone https://github.com/jacobLandefjall/Ticket-system.git
+cd Ticket-system
 
-makefile
+2.Install Dependencies
 
-EMAIL_USER=your-email@example.com
-EMAIL_PASS=your-email-password
-AUTH0_CLIENT_ID=your-auth0-client-id
-AUTH0_CLIENT_SECRET=your-auth0-client-secret
+Once you have cloned the repository and navigated into the project directory, run the following command to install all necessary Node.js dependencies: npm install
 
-Install by running:
+3.Restore the Database
+3.1 Create a New Database in MariaDB/MySQL
 
-npm install
+To test the application with the provided database, first create a new database in MariaDB or MySQL: CREATE DATABASE proj;
 
-Build
+3.2Import the Backup File into the Database
 
-No additional build steps are required. Ensure all dependencies are installed with npm install.
-Test
+Navigate to the project directory where the backup file is located and run the following command to restore the database:
 
-To run unit and integration tests, use the following command:
 
-bash
 
-npm test
+mysql -u dbadm -p -h localhost proj < ticketing_system_backup.sql
 
-This will execute the tests in the tests/ directory using Mocha and Chai.
-Run
+Start the Application
 
-To start the application, run:
+To start the application, run the following command in the terminal:
 
-sql
+4. Start the Application
 
 npm start
 
-The server will run on http://localhost:1337.
+If npm start doesn't work, you can try: node index.js
 
-To configure the database, ensure MySQL is running, and update the database configuration in config/db/ticketing_system.json with your local or remote database credentials.
+5.Access the Application
 
-You will also need to set up the database tables using the provided SQL scripts in the project.
-License
+Open your web browser and go to: http://localhost:1337
 
-This project is licensed under the ISC License. See the LICENSE file for more details.
+
+
+
+
+
+
+
+
+
+
+
+
+This README file will now guide new users on how to clone your repo, install dependencies, restore the database backup, and run the application successfully.
