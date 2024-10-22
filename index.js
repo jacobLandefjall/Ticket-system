@@ -26,11 +26,11 @@ const port = 1337;
 const config = {
     authRequired: true, // True = Login to all routes is a must.
     auth0Logout: true,
-    secret: 'a long, randomly-generated string stored in env',
-    baseURL: 'http://localhost:1337',
-    clientID: 'MnA0j6g3GdrB1JmsUvdFAy8w3a0lbtcX',
-    issuerBaseURL: 'https://dev-l8sk27fw0x2ngsvv.us.auth0.com'
-  };
+    secret: process.env.AUTH0_SECRET,  // Use secret from .env
+    baseURL: process.env.AUTH0_BASE_URL,  // Use base URL from .env
+    clientID: process.env.AUTH0_CLIENT_ID,  // Use client ID from .env
+    issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,  // Ensure issuerBaseURL is a valid URI with https
+};
 
 
 // Configure Multer for file uploads

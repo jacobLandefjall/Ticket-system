@@ -17,6 +17,27 @@ To set up and run the project, you need the following tools:
 - **MariaDB/MySQL** (for managing the database)
 - **Git** (to clone the repository)
 
+Required Keys and .env File Setup
+
+Before running the application, you will need to create a .env file in the root directory with the following required keys:
+AUTH0_DOMAIN=your-auth0-domain
+AUTH0_BASE_URL=http://localhost:1337
+AUTH0_CLIENT_ID=your-auth0-client-id
+AUTH0_CLIENT_SECRET=your-auth0-client-secret
+AUTH0_CALLBACK_URL=http://localhost:1337/callback
+AUTH0_SECRET=your-auth0-secret
+SESSION_SECRET=your-session-secret
+
+How to Get These Keys
+
+    Auth0 keys:
+        You can get your AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_DOMAIN, and AUTH0_SECRET by signing up at Auth0 and creating a new application.
+        Make sure to configure the callback URL in your Auth0 settings to match your local setup (e.g., http://localhost:1337/callback).
+
+        Session Secret:
+
+    SESSION_SECRET is a random string used for securing session cookies. Make sure it is a long, random string.
+
 ## Step-by-step Installation and Startup
 
 ### 1. Clone the GitHub Repository
@@ -44,21 +65,25 @@ The default database name used here is ticket_system.
 
 mysql -u dbadm -p ticket_system < ticketing_system_backup.sql
 
-4. Start the Application
+4. Set Up the .env File
+
+In the root directory of the project, create a .env file with the keys described in the Required Keys and .env File Setup section above.
+
+5. Start the Application
 Run the following command to start the application:
 npm start
 
 Alternatively, if that doesn't work, you can manually start the server with:
 node index.js
 
-5. Access the Application
+6. Access the Application
 
 Open your browser and navigate to:
 http://localhost:1337
 
 You should now be able to access and interact with the ticketing system.
 
-6.Testing
+7.Testing
 Run Tests
 To run the unit and integration tests, execute the following command:
 npm test
@@ -95,4 +120,4 @@ SOFTWARE.
 4. **Step-by-Step Instructions**: The flow from cloning the repo to setting up the environment variables, restoring the database, and starting the app has been clearly outlined.
 
 
-This README now covers the entire process in a structured and user-friendly way.
+This README now covers the entire process in a structured and user-friendly way. Instructions for setting up a .env file with the correct API keys and environment variables
