@@ -68,8 +68,15 @@ After creating the database, import the provided backup file to set up the neces
 mysql -u [your-database-username] -p -h localhost ticket_system < ticketing_system_backup.sql
 Replace [your-database-username] with your MySQL/MariaDB username.
 The default database name used here is ticket_system.
-
 mysql -u dbadm -p ticket_system < ticketing_system_backup.sql
+
+
+3.1 Chance to your user
+In the folder config/db file ticketing_system.json change to your:
+"Host":,
+"user":,
+"password:
+
 
 4. Set Up the .env File
 
