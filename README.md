@@ -21,11 +21,17 @@ Required Keys and .env File Setup
 
 Before running the application, you will need to create a .env file in the root directory with the following required keys:
 AUTH0_DOMAIN=your-auth0-domain
+
 AUTH0_BASE_URL=http://localhost:1337
+
 AUTH0_CLIENT_ID=your-auth0-client-id
+
 AUTH0_CLIENT_SECRET=your-auth0-client-secret
+
 AUTH0_CALLBACK_URL=http://localhost:1337/callback
+
 AUTH0_SECRET=your-auth0-secret
+
 SESSION_SECRET=your-session-secret
 
 How to Get These Keys
@@ -68,6 +74,16 @@ mysql -u dbadm -p ticket_system < ticketing_system_backup.sql
 4. Set Up the .env File
 
 In the root directory of the project, create a .env file with the keys described in the Required Keys and .env File Setup section above.
+
+4.2 File: Index.js line:17
+Put these keys in the variable config:
+const config = 
+    authRequired: "",
+    auth0Logout: "",
+    secret: "",
+    baseURL: "",
+    clientID: "",
+    issuerBaseURL: "", 
 
 5. Start the Application
 Run the following command to start the application:
