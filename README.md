@@ -56,6 +56,8 @@ cd Ticket-system
 
 2. Install all necessary Node,js Dependencies.
 npm install
+npm install express path multer mysql2 nodemailer ejs dotenv express-openid-connect --save
+
 
 3. Restore the Database
 
