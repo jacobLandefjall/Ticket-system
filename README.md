@@ -80,6 +80,7 @@ node index.js
 
 Open your browser and navigate to:
 http://localhost:1337
+Home page: http://localhost:1337/proj/home
 
 You should now be able to access and interact with the ticketing system.
 
